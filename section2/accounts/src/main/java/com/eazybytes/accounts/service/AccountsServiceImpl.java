@@ -17,6 +17,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -64,6 +65,30 @@ public class AccountsServiceImpl implements AccountsService {
         customerDto.setAccountsDto(accountsDto);
         return customerDto;
 
+    }
+
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+
+        boolean isUpdated = false;
+        AccountsDto accountsDto = customerDto.getAccountsDto();
+        if (Objects.nonNull(accountsDto)) {
+            Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber()).orElseThrow(
+                    () -> new ResourceNotFoundException("Accounts", "AccountNumber", accountsDto.getAccountNumber().toString())
+            );
+
+            AccountsMapper.mapToAccounts(accountsDto, accounts);
+            accountsRepository.save(accounts);
+
+            Customer customer = customerRepository.findById(accounts.getCustomerId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Customer", "CustomerId", accounts.getCustomerId().toString())
+            );
+
+            CustomerMapper.mapToCustomer(customer, customerDto);
+            customerRepository.save(customer);
+            isUpdated = true;
+        }
+        return isUpdated;
     }
 
     private Accounts createNewAccount(Customer savedCustomer) {

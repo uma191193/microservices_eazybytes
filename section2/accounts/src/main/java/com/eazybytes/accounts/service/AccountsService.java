@@ -15,4 +15,11 @@ public interface AccountsService {
      * @param mobileNumber is input for fetching account details
      */
     CustomerDto fetchAccountDetails(String mobileNumber);
+
+    /**
+     * @param customerDto is input for updating account details
+     * @return a boolean value
+     */
+    boolean updateAccount(CustomerDto customerDto);
+
 }
