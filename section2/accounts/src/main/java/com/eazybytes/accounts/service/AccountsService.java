@@ -22,4 +22,10 @@ public interface AccountsService {
      */
     boolean updateAccount(CustomerDto customerDto);
 
+    /**
+     * @param mobileNumber is input for deleting account details
+     * @return a boolean value
+     */
+    boolean deleteAccount(String mobileNumber);
+
 }

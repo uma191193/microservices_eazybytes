@@ -91,6 +91,24 @@ public class AccountsServiceImpl implements AccountsService {
         return isUpdated;
     }
 
+    /**
+     * @param mobileNumber is input for deleting account details
+     * @return
+     */
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "mobile number", mobileNumber)
+        );
+        if (Objects.nonNull(customer)) {
+            customerRepository.deleteByCustomerId(customer.getCustomerId());
+            accountsRepository.deleteById(customer.getCustomerId());
+            return true;
+        }
+
+        return false;
+    }
+
     private Accounts createNewAccount(Customer savedCustomer) {
         Accounts newAccounts = new Accounts();
         long randomAccountNumber = 1000000000L + this.random.nextInt(900000000);
