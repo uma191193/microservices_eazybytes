@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -38,8 +37,6 @@ public class AccountsServiceImpl implements AccountsService {
         if (customerByMobileNumber.isPresent()) {
             throw new CustomerAlreadyExistsException("Customer with the mobile number is already exists : " + customer.getMobileNumber());
         }
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Uma");
         Customer savedCustomer = customerRepository.save(customer);
         accountsRepository.save(createNewAccount(savedCustomer));
 
@@ -93,7 +90,7 @@ public class AccountsServiceImpl implements AccountsService {
 
     /**
      * @param mobileNumber is input for deleting account details
-     * @return
+     * @return a boolean value to check either a account is deleted or not
      */
     @Override
     public boolean deleteAccount(String mobileNumber) {
@@ -117,8 +114,6 @@ public class AccountsServiceImpl implements AccountsService {
         newAccounts.setAccountType(AccountsConstants.SAVINGS);
         newAccounts.setBranchAddress(AccountsConstants.ADDRESS);
         newAccounts.setAccountNumber(randomAccountNumber);
-        newAccounts.setCreatedAt(LocalDateTime.now());
-        newAccounts.setCreatedBy("Uma");
         return newAccounts;
     }
 
